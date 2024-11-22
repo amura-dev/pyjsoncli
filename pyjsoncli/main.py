@@ -2,6 +2,7 @@ import os
 import sys
 import json
 
+VERSION = '0.0.0'
 INPUT_FLAG = '-i'
 INPUT_FLAG_EXT = '--input'
 OUTPUT_FLAG = '-o'

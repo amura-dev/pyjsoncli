@@ -2,10 +2,12 @@ import os
 import sys
 import json
 
+VERSION = '0.0.0'
 INPUT_FLAG = '-i'
 INPUT_FLAG_EXT = '--input'
 OUTPUT_FLAG = '-o'
 OUTPUT_FLAG_EXT = '--output'
+
 FLAGS = [
   INPUT_FLAG,
   INPUT_FLAG_EXT,
@@ -26,6 +28,7 @@ def find_HELP():
   for arg in sys.argv:
     if arg == '--help':
       show_full_help()
+      exit(0)
 
 
 def find_INPUT():

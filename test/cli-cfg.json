@@ -1,0 +1,29 @@
+{
+  "default": {
+    "args": ["input_file", "output_file"],
+    "func": "_main.default()",
+    "_COMMENT": "ignore this thing"
+  },
+
+  "--help": {
+    "args": [],
+    "func": "_main.help()"
+  },
+
+  "-v, --version": {
+    "args": [],
+    "func": "_main.version()"
+  },
+
+  "-i, --input": {
+    "args": ["input_file"],
+    "-o, --output": {
+      "args": ["output_file"],
+      "func": "_main.generate"
+    }
+  },
+
+  "-V, --verbose": {
+    "_COMMENT": "COMING LATER"
+  }
+}

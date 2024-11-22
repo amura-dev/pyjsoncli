@@ -11,7 +11,6 @@ FLAG:           ARG:            DESCRIPTION:
 -v, --verbose   NONE            COMING LATER. Prints all functions called and
                                 and prints the stack trace if an error
                                 is raied.
--V, --version   NONE            COMING LATER. Prints current version of
-                                package.
+-V, --version   NONE            Prints the current version of the package.
 
 Find the full documentation at <https://github.com/amura-dev/pyjsoncli/>

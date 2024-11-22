@@ -1,6 +1,8 @@
 import os
 import sys
-import json
+
+import help
+from handler import JSONHandler
 
 VERSION = '0.0.0'
 INPUT_FLAG = '-i'
@@ -17,12 +19,14 @@ FLAGS = [
 
 def main():
   find_HELP()
-  # find_VERSION
+  find_VERSION()
   # find_VERBOSE
 
+  handler = None
   found_INPUT, value_INPUT = find_INPUT()
   if found_INPUT:
-    # syntax check
+    handler = JSONHandler(value_INPUT)
+    handler.parse()
     pass
 
   found_OUTPUT, value_OUTPUT = find_OUTPUT()
@@ -36,15 +40,20 @@ def main():
 def find_HELP():
   for arg in sys.argv:
     if arg == '--help':
-      show_full_help()
+      help.show_full_help()
       exit(0)
+
+
+def find_VERSION():
+  if sys.argv[1] == '--version':
+    print(f'pyjsoncli {VERSION}')
 
 
 def find_INPUT():
   try:
     fpath = sys.argv[1]
-  except IndexError:
-    show_mini_help()
+  except Indexhelp.Error:
+    help.show_mini_help()
     exit(1)
   
   if not_flag(fpath):
@@ -52,53 +61,53 @@ def find_INPUT():
     if os.path.exists(fpath_abs) and os.path.isfile(fpath_abs):
       return (True, fpath_abs)
     else:
-      raise Error(f"Specified input file does not exist: {fpath}")
+      raise help.Error(f"Specified input file does not exist: {fpath}")
 
   idxs = find_many(sys.argv, INPUT_FLAG, INPUT_FLAG_EXT)
   if len(idxs) == 0:
-    raise Error("No input file specified")
+    raise help.Error("No input file specified")
   elif len(idxs) > 1:
-    raise Error(f"Multiple input flags found: {INPUT_FLAG}, {INPUT_FLAG_EXT}")
+    raise help.Error(f"Multiple input flags found: {INPUT_FLAG}, {INPUT_FLAG_EXT}")
   elif len(idxs) == 1:
     try:
       fpath = sys.argv[idxs[0] + 1]
-    except IndexError:
-      raise Error("No input file specified")
+    except Indexhelp.Error:
+      raise help.Error("No input file specified")
     else:
       fpath_abs = os.path.abspath(fpath)
       if os.path.exists(fpath_abs) and os.path.isfile(fpath_abs):
         return (True, fpath_abs)
       else:
-        raise Error(f"Specified input file does not exist: {fpath}")
+        raise help.Error(f"Specified input file does not exist: {fpath}")
     
 
 def find_OUTPUT():
   try:
     fpath = sys.argv[1]
-  except IndexError:
-    show_mini_help()
+  except Indexhelp.Error:
+    help.show_mini_help()
     exit(1)
   
   if not_flag(fpath):
     fpath_abs = os.path.abspath(fpath)
     fpath_dir = os.path.dirname(fpath_abs)
-    if os.path.exists(fpath_dir) and os.path.isdir(fpath_dir):
+    if os.path.exists(fpath_dir):
       return (True, fpath_abs)
 
   idxs = find_many(sys.argv, OUTPUT_FLAG, OUTPUT_FLAG_EXT)
   if len(idxs) == 0:
-    raise Error("No output file specified")
+    raise help.Error("No output file specified")
   elif len(idxs) > 1:
-    raise Error(f"Multiple output flags found: {OUTPUT_FLAG}, {OUTPUT_FLAG_EXT}")
+    raise help.Error(f"Multiple output flags found: {OUTPUT_FLAG}, {OUTPUT_FLAG_EXT}")
   elif len(idxs) == 1:
     try:
       fpath = sys.argv[idxs[0] + 1]
-    except IndexError:
-      raise Error("No input output specified")
+    except Indexhelp.Error:
+      raise help.Error("No input output specified")
     else:
       fpath_abs = os.path.abspath(fpath)
       fpath_dir = os.path.dirname(fpath_abs)
-      if os.path.exists(fpath_dir) and os.path.isdir(fpath_dir):
+      if os.path.exists(fpath_dir):
         return (True, fpath_abs)
 
 
@@ -116,22 +125,6 @@ def find_many(xs, *args):
 
   return idxs
 
-
-def show_mini_help():
-  print("Use 'pycli --help' for more information")
-
-
-def show_full_help():
-  with open('HELP.txt', 'r') as fh:
-    for line in fh:
-      print(line, end='')
-
-
-class Error():
-  def __init__(self, message):
-    print(message)
-    show_mini_help()
-    exit(0)
 
 if __name__ == '__main__':
   main()

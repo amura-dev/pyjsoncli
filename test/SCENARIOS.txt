@@ -1,0 +1,10 @@
+- in file is found, first arg
+- in file is found, passed by flag
+- in file is not found
+
+- out file is found, second arg
+- out file is found, passed by flag
+- out file is not found
+
+- loggin is turned on
+- loggin is turned off

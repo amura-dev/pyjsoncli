@@ -1,0 +1,17 @@
+Usage: pyjsoncli [-i] REL_FILE_PATH [-o] REL_FILE_PATH [-v]
+Generate a Python script for your own CLI utility configured with JSON.
+
+Flags and their arguments:
+FLAG:           ARG:            DESCRIPTION:
+--help          NONE            Prints this help message.
+-i, --input     REL_FILE_PATH   Indicates that the input file path is
+                                specified right after the flag.
+-o, --output    REL_FILE_PATH   Indicates that the output file name and path
+                                will be what is specified right after the flag.
+-v, --verbose   NONE            COMING LATER. Prints all functions called and
+                                and prints the stack trace if an error
+                                is raied.
+-V, --version   NONE            COMING LATER. Prints current version of
+                                package.
+
+Find the full documentation at <https://github.com/amura-dev/pyjsoncli/>

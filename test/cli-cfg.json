@@ -1,25 +1,25 @@
 {
   "default": {
     "args": ["input_file", "output_file"],
-    "func": "_main.default()",
+    "func": "main.Class.default",
     "_COMMENT": "ignore this thing"
   },
 
   "--help": {
     "args": [],
-    "func": "_main.help()"
+    "func": "help.help"
   },
 
   "-v, --version": {
     "args": [],
-    "func": "_main.version()"
+    "func": "main.version"
   },
 
   "-i, --input": {
     "args": ["input_file"],
     "-o, --output": {
       "args": ["output_file"],
-      "func": "_main.generate"
+      "func": "main.generate"
     }
   },
 

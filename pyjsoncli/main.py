@@ -31,7 +31,7 @@ def main():
 
   found_OUTPUT, value_OUTPUT = find_OUTPUT()
   if found_OUTPUT:
-    pass
+    handler.gen_script(value_OUTPUT)
     # see if dir exists
     # create file there
     # generate into specified file
@@ -83,10 +83,11 @@ def find_INPUT():
 
 def find_OUTPUT():
   try:
-    fpath = sys.argv[1]
-  except Indexhelp.Error:
-    help.show_mini_help()
-    exit(1)
+    fpath = sys.argv[2]
+  except IndexError:
+    fpath_in_abs = os.path.abspath(sys.argv[1])
+    fpath_abs = fpath_in_abs.split('.')[-2] + '.py'
+    return (True, fpath_abs)
   
   if not_flag(fpath):
     fpath_abs = os.path.abspath(fpath)

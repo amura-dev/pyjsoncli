@@ -1,5 +1,4 @@
 import json
-import logging
 
 import help
 
@@ -9,7 +8,7 @@ class JSONHandler():
   def __init__(self, fpath_abs):
     self.fpath_abs = fpath_abs
     self.arg_accumulator = []
-    self.func_accumulator = [] # [(func, [arg])]
+    self.func_accum = [] # [(func, [arg])]
     self.found_default = False
 
   
@@ -20,14 +19,14 @@ class JSONHandler():
       if not isinstance(data, dict):
         raise help.Error("Syntax error: Outermost structure must be a \
                          dictionary")
-      # TODO: detect duplicate flags
-      for entry in data.values():
-        help.dbg_print("new entry")
-        recur = True
-        while recur:
-          help.dbg_print(entry)
-          recur, entry = self.parse_entry(entry)
-      help.dbg_print("END:", self.func_accumulator)
+    # TODO: detect duplicate flags
+    for entry in data.values():
+      help.dbg_print("new entry")
+      recur = True
+      while recur:
+        help.dbg_print(entry)
+        recur, entry = self.parse_entry(entry)
+    help.dbg_print("END:", self.func_accum)
 
 
   def parse_entry(self, entry):
@@ -62,6 +61,8 @@ class JSONHandler():
         continue
 
       elif key == 'default' and self.found_default == False:
+        # TODO: implement multiple defaults on the outermost layer, where
+        # each default has a different amount of arguments.
         help.dbg_print("DEFAULTS SET")
         self.found_default = True
         return (True, val)
@@ -79,7 +80,7 @@ class JSONHandler():
       elif flag == None and func != None:
         func_n_args = (func, self.arg_accumulator)
         self.arg_accumulator = []
-        self.func_accumulator.append(func_n_args)
+        self.func_accum.append(func_n_args)
         return (False, -1)
       elif func == None and flag != None:
         return (True, next_entry)
@@ -90,4 +91,32 @@ class JSONHandler():
     
 
   def gen_script(self, save_path_abs):
-    pass
+    red_func_accum = []
+    import_paths = []
+
+    help.dbg_print(save_path_abs)
+    for func_n_args in self.func_accum:
+      json_import_path = func_n_args[0].split('.')
+      
+      red_func = None
+      if json_import_path[-2][0].isupper():
+        import_paths += json_import_path[:-2]
+        red_func = '.'.join(json_import_path[-3:])
+      else:
+        import_paths += json_import_path[:-1]
+        red_func = '.'.join(json_import_path[-2:])
+
+      red_func_n_args = (red_func, func_n_args[1])
+      red_func_accum.append(red_func_n_args)
+
+    import_paths = set(import_paths)
+    help.dbg_print(import_paths)
+    help.dbg_print(red_func_accum)
+
+    with open(save_path_abs, 'w+') as fh:
+      for path in import_paths:
+        fh.write(f'import {path}\n')
+      fh.write('\n')
+
+
+
